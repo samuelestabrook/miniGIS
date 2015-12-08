@@ -2,7 +2,8 @@ from ReadShapeFile import *
 import struct
 
 class Layer:
-    def __init__(self, fileName, color):
+    def __init__(self, fileName, color, points=[]):
+        self.points = points
         self.features = []
         self.loadData(fileName, color)
         self.fileName = fileName
@@ -52,6 +53,33 @@ class Layer:
                 intersects.append(intersect)
             
         return intersects
+
+    # check if the points are inside the polygon layer
+    # if there are no point or polygon layers, return None
+    def checkContains(self, layer):
+        print "self shapeType is " + str(self.shapeType)
+        print "layer shapeType is " + str(layer.shapeType)
+        if(self.shapeType != 5 or layer.shapeType != 1):
+            return None
+        # if the bounding bxes don't overlap, they do not intersect either
+        if(self.minx > layer.maxx or self.maxx < layer.minx or self.miny > layer.maxy or self.maxx < layer.miny):
+            return None
+        contains = []
+
+        for feature in self.features:
+            print 'selecting polygon'
+
+            # containLayer is in Polygon.py
+            tempContains = feature.containLayer(layer)
+            if (tempContains == None or tempContains == []):
+                continue
+            for contain in tempContains:
+                print str(contain)
+                #
+                #
+                contains.append(contain)
+            
+        return contains
 
     # visualize the layer using color
     def vis(self, map):

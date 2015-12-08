@@ -25,6 +25,9 @@ class Map:
         # This is used to save the intersect points between two polyline layers
         self.intersects = []
 
+        # same for containment
+        self.contains = []
+
     # open the shape files in the directory
     def openMap(self, mapDir):
         try:
@@ -173,6 +176,25 @@ class Map:
 
         self.visIntersects()
 
+    # check the containment of points within a polygon via the ray casting (check) method
+    def checkPIP(self):
+        
+        # PtPolyLayerDialog is in Dialogs.py
+        d = PtPolyLayerDialog(self.can, self.layers)
+        self.can.wait_window(d.top)
+        if not d.ok:
+            return
+        selectedLayers = d.get()
+        if len(d.get())!=2:
+            tkMessageBox.showinfo("Select layers", "Please select point then polygon layers")
+            return
+
+        # checkPIP is in Layer.py
+        # have to switch the array designation to ensure the points are loaded into the algorithm properly
+        self.contains = selectedLayers[0].checkContains(selectedLayers[1])
+
+        self.visContains()
+
     # visualize the map in the canvas
     def vis(self):
         print 'map ratio is:', self.ratio
@@ -188,14 +210,23 @@ class Map:
                 layer.vis(self)
         for point in self.intersects:
             point.vis(self, layer.color)
+        for point in self.contains:
+            point.vis(self, layer.color)
         
         self.visIntersects()
+        self.visContains()
         self.can.pack()
 
     # visulize the intersections
     def visIntersects(self):
         for point in self.intersects:
             point.visInterseccts(self)
+
+    # visulize the points contained in a polygon
+    def visContains(self):
+#        print str(self.contains)
+        for point in self.contains:
+            point.visPIP(self)
 
     def clean(self):
         self.layers = []
@@ -207,3 +238,4 @@ class Map:
         
         # This is used to save the intersect points between two polyline layers
         self.intersects = []
+        self.contains = []

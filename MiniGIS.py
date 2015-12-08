@@ -70,6 +70,11 @@ def closeLayer():
 
 def checkIntersect():
     map.checkIntersect()
+
+# define the new menu item for the program miniGIS
+# checkPIP is in Map.py
+def checkPIP():
+    map.checkPIP()
     
 def makemenu(win):
     top = Menu(win)       
@@ -100,6 +105,11 @@ def makemenu(win):
     intersect = Menu(top, tearoff=0)
     intersect.add_command(label='Check Intersect',     command=checkIntersect,  underline=0)
     top.add_cascade(label='Intersect',     menu=intersect,        underline=0)
+
+    # add the menu item separately from the intersect geoprocessing script
+    point_in_poly = Menu(top, tearoff=0)
+    point_in_poly.add_command(label='Check Containment (PIP)',     command=checkPIP,  underline=0)
+    top.add_cascade(label='Containment',     menu=point_in_poly,     underline=0)
     
 
 if __name__ == '__main__':

@@ -61,13 +61,17 @@ def readShpPoly(layer,fileName, layerType):# parameter fileName is the pathfile 
         for i in range(feature.numParts):
             str = str+'i'
         feature.partsIndex = struct.unpack(str,s)
+        pts = []
         for i in range(feature.numPoints):
             s = shpFile.read(16)
             pointx, pointy = struct.unpack('dd',s)
             x.append(pointx)
             y.append(pointy)
+            pts.append(Point(pointx,pointy))
+        layer.points.append(pts)
         feature.setCoordinates(x, y)
         layer.features.append(feature)
+        
     shpFile.close()
 
 

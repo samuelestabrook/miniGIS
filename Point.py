@@ -18,4 +18,7 @@ class Point(Feature):
         self.transform(map)
 	map.can.create_oval(self.winx-4, self.winy-4, self.winx+4, self.winy+4, outline=borderColor, fill=fillColor, width=1)
 
-        
+    # Using different color and oval to visualize contained points
+    def visPIP(self, map, borderColor='orange', fillColor='blue'):
+        self.transform(map)
+	map.can.create_oval(self.winx-4, self.winy-4, self.winx+4, self.winy+4, outline=borderColor, fill=fillColor, width=1)
